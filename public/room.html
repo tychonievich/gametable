@@ -1,0 +1,99 @@
+﻿<!DOCTYPE html>
+<html>
+	<head>
+		<link rel="stylesheet" href="styles.css"/>
+		<script src="svg.js"></script><script src="ui.js"></script>
+        <script>
+            (() => {
+                let param = new URLSearchParams(location.search)
+                document.title = param.get('room')+' game table'
+                window.user = param.get('name')
+                window.room = param.get('room')
+            })()
+        </script>
+	</head>
+	<body onload="loaded()">
+		<div id="dice"></div>
+		<div id="play">
+			<div id="help">help text goes here</div>
+
+<svg id="board" xmlns="http://www.w3.org/2000/svg" viewBox='-1 -1 2 2'>
+    <defs>
+        <filter id="f_padding">
+            <feMorphology operator="dilate" radius="0.4"/>
+            <feColorMatrix type="matrix" values="0 0 0 0 1
+                                                 0 0 0 0 1
+                                                 0 0 0 0 1
+                                                 0 0 0 1 0" 
+                            />
+            <feGaussianBlur result="bigOut" stdDeviation="0.2" />
+            <feBlend in="SourceGraphic" in2="bigOut" mode="normal" />
+        </filter>
+        <filter id="f_fly" x="-100%" y="-100%" width="300%" height="300%">
+            <feOffset in="SourceAlpha" dx="1" dy="1" />
+            <feColorMatrix type="matrix" values="1 0 0 0 0
+                                                 0 1 0 0 0
+                                                 0 0 1 0 0
+                                                 0 0 0 0.5 0" />
+            <feGaussianBlur result="blurOut" stdDeviation="1" />
+            <feBlend in="SourceGraphic" in2="blurOut" mode="normal" />
+        </filter>
+        <filter id="f_walk" x="-50%" y="-50%" width="200%" height="200%">
+            <feOffset in="SourceAlpha" dx="0.15" dy="0.15" />
+            <feColorMatrix type="matrix" values="1 0 0 0 0
+                                                 0 1 0 0 0
+                                                 0 0 1 0 0
+                                                 0 0 0 0.5 0" />
+            <feGaussianBlur result="blurOut" stdDeviation="0.15" />
+            <feBlend in="SourceGraphic" in2="blurOut" mode="normal" />
+        </filter>
+        <filter id="f_selected" x="-100%" y="-100%" width="300%" height="300%">
+            <feMorphology operator="dilate" radius="0.25"/>
+            <feColorMatrix type="matrix" values="0 0 0 0 1
+                                                 0 0 0 0 0
+                                                 0 0 0 0 0.5
+                                                 0 0 0 0.5 0" 
+                            />
+            <feGaussianBlur result="bigOut" stdDeviation="0.25" />
+            <feBlend in="SourceGraphic" in2="bigOut" mode="normal" />
+        </filter>
+        <filter id="f_fly_selected" x="-100%" y="-100%" width="300%" height="300%">
+            <feMorphology operator="dilate" radius="0.25"/>
+            <feColorMatrix type="matrix" values="0 0 0 0 1
+                                                 0 0 0 0 0
+                                                 0 0 0 0 0.5
+                                                 0 0 0 0.5 0" 
+                            />
+            <feGaussianBlur result="bigOut" stdDeviation="0.25" />
+            <feOffset in="SourceAlpha" dx="1" dy="1" />
+            <feColorMatrix type="matrix" values="1 0 0 0 0
+                                                 0 1 0 0 0
+                                                 0 0 1 0 0
+                                                 0 0 0 0.5 0" />
+            <feGaussianBlur result="blurOut" stdDeviation="1" />
+            <feMerge>
+                <feMergeNode in="blurOut"/>
+                <feMergeNode in="bigOut"/>
+                <feMergeNode in="SourceGraphic"/>
+            </feMerge>
+        </filter>
+        <filter id="f_invisible">
+            <feColorMatrix type="matrix" values="1 0 0 0 0
+                                                 0 1 0 0 0
+                                                 0 0 1 0 0
+                                                 0 0 0 0.5 0" 
+                            />
+            <feGaussianBlur stdDeviation="0.125" />
+        </filter>
+    </defs>
+    <g id="background"></g>
+    <g id="invisible"></g>
+    <g id="trails"></g>
+    <g id="tokens"></g>
+    <g id="overlay"></g>
+    <circle id="brush" cx="0" cy="0" r="50" fill="none" stroke="black" stroke-opacity="0.5" stroke-width="0.1" style="display:none"/>
+</svg>
+
+		</div>
+	</body>
+</html>

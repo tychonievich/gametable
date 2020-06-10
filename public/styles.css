@@ -1,0 +1,88 @@
+body {
+    display: flex;
+    align-items: stretch;
+    flex-direction: row;
+    margin: 0;
+    position:absolute;
+    top:0; left:0; width:100vw; height:100vh;
+}
+#dice { 
+    flex: 0 1 9em;
+    display: flex;
+    align-items: stretch;
+    flex-direction: column;
+}
+#dice > div {
+    flex: 1 1 10em;
+    background: white;
+    padding: 0.125em;
+    box-shadow: inset 0 0 0.25em #000;
+    overflow-y: auto;
+}
+#dice > div:before {
+    content: attr(id);
+    padding: 0.25em;
+    border-radius: 0.5em;
+    box-shadow: inset 0.1em 0.1em 0.3em rgba(0,0,0,0.5);
+}
+#play {
+    flex: 1 1 auto;
+    display: flex;
+    align-items: stretch;
+    flex-direction: column;
+}
+#board {
+    flex: 1 1 auto;
+    user-select: none;
+}
+@media (max-aspect-ratio: 1/1) {
+    body { flex-direction: column; }
+    #dice { 
+        flex-direction: row; 
+        flex: 0 1 6em; 
+        max-height: 6em;
+    }
+}
+
+#help details > div { text-indent: -2em; padding-left:3em; }
+#help details summary { text-align: center; }
+#help details > div > * { text-indent: 0em; }
+#help span { display: inline-block; }
+#help details summary:after { content: "   (more …)"; }
+#help details[open] summary:after { content: "   (less …)"; }
+#help { border-bottom: thin dotted black; }
+
+circle.selected { filter: url(#f_selected); }
+
+.old { opacity: 0.5; }
+.die {
+    display:inline-block;
+    width:1.7em; height:1.7em; line-height:1.7em; 
+    text-align:center; vertical-align:middle;
+    margin: 0.125em;
+    font-family: sans-serif;
+}
+.d4 { background-image:url('d4.svg'); }
+.d6 { background-image:url('d6.svg'); }
+.d8 { background-image:url('d8.svg'); }
+.d10 { background-image:url('d10.svg'); }
+.d12 { background-image:url('d12.svg'); }
+.d20 { background-image:url('d20.svg'); }
+
+.d20.crit { color: #050; font-weight: bold; }
+.d20.fumble { color: #700; font-weight: bold; }
+
+.timestamp { opacity: 70%; font-size: 70%; }
+
+#overlay text { filter: url(#f_padding); }
+#invisible { filter: url(#f_invisible); }
+
+
+#tokens > circle { cursor: move; }
+
+circle:not(.flying):not(.prone):not(.down):not(.selected) { filter: url(#f_walk); }
+circle.flying { filter: url(#f_fly); opacity: 0.85; }
+circle.flying.selected { filter: url(#f_fly_selected); }
+circle.prone { opacity: 0.7; }
+circle.down { opacity: 0.3; }
+#brush { filter: none; }
