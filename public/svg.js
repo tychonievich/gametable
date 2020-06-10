@@ -339,7 +339,7 @@ function Creature(within, x, y, attrs) {
     this.y = y
 
     if (!attrs.name) attrs.name = 'creature'
-    this.id = attrs.id || attrs.name +'-'+ c.querySelectorAll('*[id|="'+attrs.name+'"]').length
+    this.id = attrs.id || attrs.name.replace(/[^a-zA-Z0-9]+/g,'_') +'-'+ c.querySelectorAll('*[id|="'+attrs.name.replace(/[^a-zA-Z0-9]+/g,'_')+'"]').length
     
     this.trail = null // created upon move, removed afterward
     

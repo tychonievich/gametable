@@ -158,8 +158,8 @@ final class Token {
 	this(string name) {
 		path = NativePath.fromString(`tokens/`
 			~ name
-			.replaceAll(ctRegex!`\p{C}|/`, ``)
 			.replaceAll(ctRegex!`-\d+$`, ``)
+			.replaceAll(ctRegex!`[^a-zA-Z0-9]+`, `_`)
 			~ `.json`);
 		if (path.existsFile) data = path.readFileUTF8.parseJsonString;
 		else {

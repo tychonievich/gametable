@@ -172,7 +172,7 @@ var handlers = {
             let def = {
                 width: 5,
                 color: 'gray',
-                id: token.name+'-'+num
+                id: token.name.replace(/[^a-zA-Z0-9]+/g, '_')+'-'+num
             }
             let critter = new Creature('#tokens', x, y, {...def, ...token})
             //console.log('creature created', critter.id)
