@@ -4,7 +4,10 @@
 	],
 	"copyright": "Copyright © 2020, Luther Tychonievich",
 	"dependencies": {
-		"vibe-d": "~>0.8.6"
+		"vibe-d:core": "~>0.8.6",
+		"vibe-d:http": "~>0.8.6",
+		"vibe-d:data": "~>0.8.6",
+		"vibe-d:web": "~>0.8.6"
 	},
 	"description": "Whiteboard, dice trays, and character tokens",
 	"license": "MIT License",

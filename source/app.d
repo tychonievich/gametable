@@ -1,7 +1,19 @@
-import vibe.vibe;
-import vibe.utils.array;
+import vibe.core.core;
+import vibe.core.file;
+import vibe.core.log;
+import vibe.core.sync;
 import vibe.data.json;
-import std.conv : text;
+import vibe.core.path;
+import vibe.http.fileserver;
+import vibe.http.router;
+import vibe.http.server;
+import vibe.http.websockets;
+import vibe.utils.string;
+import vibe.web.web;
+import std.conv : text, to;
+import std.string;
+import vibe.data.json;
+import std.conv : text, to;
 import std.regex : ctRegex, matchFirst, replaceAll;
 
 final class WebChat {
