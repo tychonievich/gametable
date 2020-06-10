@@ -82,6 +82,7 @@ The other files are served up live on every connection attempt, so refreshing th
 
 - [ ] dice tray reordering
     - [ ] allow dummy entries in tray list
+- [ ] allow recentering/recropping images
 - [ ] undo/redo of drawing and motion
 - [ ] invisible tokens and drawings
 - [ ] flying height
@@ -90,5 +91,5 @@ The other files are served up live on every connection attempt, so refreshing th
     - [ ] per room
     - [ ] with SSO
     - [ ] upload token image
-    - [ ] allow GM renaming
+    - [ ] allow GM-role renaming (e.g. DM, Narrator, etc)
 - [ ] prevent or notify if same user logs in twice
