@@ -14,6 +14,8 @@ The intent of this project is to replicate the tabletop gaming environment I use
         │   ├── d4.svg
         │   ├── d6.svg
         │   ├── d8.svg
+        │   ├── dialog-polyfill.css
+        │   ├── dialog-polyfill.js
         │   ├── room.html
         │   ├── styles.css
         │   ├── svg.js
@@ -93,3 +95,9 @@ The other files are served up live on every connection attempt, so refreshing th
     - [ ] upload token image
     - [ ] allow GM-role renaming (e.g. DM, Narrator, etc)
 - [ ] prevent or notify if same user logs in twice
+
+# License
+
+The dialog-polyfill files are from <https://github.com/GoogleChrome/dialog-polyfill> and are distributed under the terms of <https://github.com/GoogleChrome/dialog-polyfill/blob/master/LICENSE>.
+
+All other components are original to the author and distributed under the terms of <https://github.com/tychonievich/gametable/blob/master/LICENSE>

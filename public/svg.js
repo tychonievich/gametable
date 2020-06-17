@@ -397,6 +397,11 @@ Creature.prototype.set = function(attrs) {
     if ('name' in attrs) {
         this.name = attrs.name
         this.title.firstChild.data = attrs.name
+        if (this.token.classList.length > 0) {
+            this.title.firstChild.appendData('\n('+
+            Array.from(this.token.classList).join(', ')
+            +')')
+        }
         if (this.bg.lastChild.tagName == 'text') {
             let fs = 1.8/textLength(this.name);
             this.bg.lastChild.firstChild.data = this.name
@@ -442,7 +447,9 @@ Creature.prototype.set = function(attrs) {
                 this.bg.lastChild.setAttribute('font-size', fs)
             }
         }
-        
+    }
+    if ('pinGM' in attrs) {
+        this.pinGM = attrs.pinGM
     }
 }
 
@@ -490,19 +497,45 @@ Creature.prototype.lockAt = function(i,p) {
 }
 
 Creature.prototype.addClass = function(s) {
+    if (!s) return
     this.token.classList.add(s)
     this.bg.classList.add(s)
+    this.title.firstChild.data = this.name
+    if (this.token.classList.length > 0) {
+        this.title.firstChild.appendData('\n('+
+        Array.from(this.token.classList).join(', ')
+        +')')
+    }
 }
 Creature.prototype.removeClass = function(s) {
     this.token.classList.remove(s)
     this.bg.classList.remove(s)
+    this.title.firstChild.data = this.name
+    if (this.token.classList.length > 0) {
+        this.title.firstChild.appendData('\n('+
+        Array.from(this.token.classList).join(', ')
+        +')')
+    }
 }
 Creature.prototype.toggleClass = function(s) {
     this.token.classList.toggle(s)
     this.bg.classList.toggle(s)
+    this.title.firstChild.data = this.name
+    if (this.token.classList.length > 0) {
+        this.title.firstChild.appendData('\n('+
+        Array.from(this.token.classList).join(', ')
+        +')')
+    }
 }
 
-
+Creature.prototype.remove = function() {
+    if (this.trail) {
+        if (this.trail.label) this.trail.label.remove()
+        this.trail.remove()
+    }
+    this.bg.remove()
+    this.token.remove()
+}
 
 
 

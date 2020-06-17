@@ -3,7 +3,7 @@ function wsConnect(onopen) {
     let url = 'ws://' + location.host + '/ws' + location.search
     console.log('connecting to', url)
     window.sock = new WebSocket(url);
-    window.sock.onopen = evt => console.log('conencted')
+    window.sock.onopen = evt => console.log('connected')
     window.sock.onmessage = msg => {
         let obj = JSON.parse(msg.data)
         //console.log('got',msg.data)
@@ -71,11 +71,16 @@ var handlers = {
         
         let hastoken = false
         c.querySelectorAll('g > *').forEach(x => {
-            if (x.ownCr && x.id == user+'-0') {// my token; replicate it
-                postAction('newtoken', [x.ownCr.x, x.ownCr.y, {name:user}])
+            let cr = x.ownCr;
+            if (cr && x.id == user+'-0') {// my token; replicate it
+                postAction('newtoken', [cr.x, cr.y, {name:user}])
+                hastoken = true
+            } else if (cr && cr.pinGM && user == 'GM') {
+                let num = Number(cr.id.replace(/.*-/g, ''))
+                postAction('newtoken', [cr.x, cr.y, {pinGM:true}, {name:cr.name, num:num}])
                 hastoken = true
             }
-            x.remove()
+            cr.remove()
         })
         c.querySelectorAll('defs pattern').forEach(x => x.remove())
         if (!hastoken) {
@@ -164,8 +169,9 @@ var handlers = {
         where.lastElementChild.scrollIntoView()
     },
     
-    newtoken: (sender,x,y,token) => {
+    newtoken: (sender,x,y,token,self) => {
         //console.log('new token', token)
+        if (self) token = {...self, ...token}
         let num = token.num || 0
         let old = c.getElementById(token.name+'-'+num)
         if (!old) {
@@ -197,14 +203,7 @@ var handlers = {
         c.getElementById(id).ownCr.set({pos:pos})
     },
     delone: (sender, id) => {
-        //throw Error('fix the pingback problem')
-        let cr = c.getElementById(id).ownCr
-        if (cr.trail) {
-            if (cr.trail.label) cr.trail.label.remove()
-            cr.trail.remove()
-        }
-        cr.bg.remove()
-        cr.token.remove()
+        c.getElementById(id).ownCr.remove()
     },
     toggleclass: (sender, id, cls) => {
         c.getElementById(id).ownCr.toggleClass(cls)
@@ -278,7 +277,7 @@ function postAction(func) {
             func = {func:func, args:Array.prototype.slice.call(arguments,1)}
     }
     if ('object' == typeof func) func = JSON.stringify(func)
-    //console.log('sending', func)
+console.log('sending', func)
     if (!window.sock || window.sock.readyState > 1) wsConnect()
     if (!window.sock || window.sock.readyState > 1)
         throw Error('unable to open WebSocket')
@@ -359,6 +358,8 @@ function resortTokens() {
 }
 
 function keyhandler(evt) {
+    if (document.querySelector('dialog')) return
+
     if (evt.isComposing || evt.repeat) return;
     if (evt.key == 'Escape') { window.mode = 'select'; return; }
     let k = evt.key
@@ -489,6 +490,12 @@ function keyhandler(evt) {
             postAction('toggleclass', [selected.id, 'down'])
         break
 
+        case 'a':
+        if (cursorMode == 'select' && selected) {
+            statusDialog(selected)
+        }
+        break
+
         case 'v': console.warn('visible change not implemented'); break
         
         // consider adding point-to mode
@@ -506,6 +513,7 @@ function keyhandler(evt) {
 }
 
 function clickhandler(evt) {
+    if (document.querySelector('dialog')) return
     //console.log(evt.target)
     if (user == 'GM' && evt.target.tagName == 'polyline' && evt.target && (evt.ctrlKey || evt.metaKey)) {
         // delete stroke action
@@ -563,6 +571,8 @@ function clickhandler(evt) {
     }
 }
 function lifthandler(evt) {
+     if (document.querySelector('dialog')) return
+
     if (cursorMode == 'select') {
         if (selected && selected.trail) {
             selected.trail.endExtend()
@@ -585,6 +595,8 @@ function lifthandler(evt) {
     }
 }
 function movehandler(evt) {
+    if (document.querySelector('dialog')) return
+
     let here = getMousePos(evt);
     let brush = c.getElementById('brush')
     brush.cx.baseVal.value = here.x
@@ -660,6 +672,65 @@ function randomY(centering) {
     return ((1-centering)*Math.random() + centering*0.5) * c.viewBox.baseVal.height + c.viewBox.baseVal.y
 }
 
+function statusDialog(creature) {
+    // <dialog> has spotty support, so uses polyfill
+    let d = document.createElement('dialog')
+    d.innerHTML = `Edit token status:
+    <form method="dialog">
+`+(user == 'GM' ? `<label><input type="checkbox" id="PinGM"/> PinGM</label><br/>` : '')+`
+<label><input type="checkbox" id="status_blinded"/> Blinded</label><br/>
+<label><input type="checkbox" id="status_charmed"/> Charmed</label><br/>
+<label><input type="checkbox" id="status_deafened"/> Deafened</label><br/>
+<label><input type="checkbox" id="status_exhaustion1"/> Exhaustion1</label><br/>
+<label><input type="checkbox" id="status_exhaustion2"/> Exhaustion2</label><br/>
+<label><input type="checkbox" id="status_exhaustion3"/> Exhaustion3</label><br/>
+<label><input type="checkbox" id="status_exhaustion4"/> Exhaustion4</label><br/>
+<label><input type="checkbox" id="status_exhaustion5"/> Exhaustion5</label><br/>
+<label><input type="checkbox" id="status_frightened"/> Frightened</label><br/>
+<label><input type="checkbox" id="status_grappled"/> Grappled</label><br/>
+<label><input type="checkbox" id="status_incapacitated"/> Incapacitated</label><br/>
+<label><input type="checkbox" id="status_invisible"/> Invisible</label><br/>
+<label><input type="checkbox" id="status_paralyzed"/> Paralyzed</label><br/>
+<label><input type="checkbox" id="status_petrified"/> Petrified</label><br/>
+<label><input type="checkbox" id="status_poisoned"/> Poisoned</label><br/>
+<label><input type="checkbox" id="status_prone"/> Prone</label><br/>
+<label><input type="checkbox" id="status_restrained"/> Restrained</label><br/>
+<label><input type="checkbox" id="status_stunned"/> Stunned</label><br/>
+<label><input type="checkbox" id="status_unconscious"/> Unconscious</label><br/>
+Other: <input type="text" id="status_other"/> <br/>
+<input type="submit" id="status_submit" value="Done"/>
+    </form>`
+    document.body.appendChild(d);
+    dialogPolyfill.registerDialog(d);
+    // pre-fill known status
+    for(let s of creature.token.classList) {
+        if (s == 'selected') continue   
+        let e = document.getElementById('status_'+s)
+        if (e) e.checked = true
+        else {
+            e = document.getElementById('status_other')
+            if (e.value.length > 0) e.value += ', '
+            e.value += s
+        }
+    }
+    if (user == 'GM' && creature.pinGM)
+        document.getElementById('PinGM').checked = true
+
+    // add submission event handler
+    d.addEventListener('close', (evt)=>{
+        let os = new Set(creature.token.classList)
+        os.delete('selected')
+        let ns = new Set(Array.from(d.querySelectorAll('input:checked')).map(x => x.id.substring(7)))
+        ns.delete('')
+        for(let e of os) if (!ns.has(e)) postAction('toggleclass', [creature.id, e])
+        for(let e of ns) if (!os.has(e)) postAction('toggleclass', [creature.id, e])
+        if (user == 'GM') creature.pinGM = document.getElementById('PinGM').checked
+        d.remove()
+    })
+    
+    d.showModal();
+}
+
 
 function loaded() {
     console.log('loaded')
@@ -728,6 +799,7 @@ function loaded() {
     <span><u>c</u>olor</span>   
     <span><u>i</u>mage</span>   
     <span>token <u>w</u>idth</span>   
+    <span><u>a</u>dd status</span>   
     <span><u>f</u>lying</span>   
     <span>pr<u>o</u>ne</span>   
     <span><u>d</u>ead</span><!--   
