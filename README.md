@@ -53,7 +53,8 @@ A list of such keys is present in the game itself.
 
 `source/app.d` is a fairly minimal [vibe.d](https://vibed.org) server
 that mostly just echoes websocket messages to all users.
-It also has some special tracking of rooms and tokens.
+It also has some special tracking of rooms and tokens,
+and a PUSH listener fo git hooking.
 
 `public/svg.js` defines the character and stroke/line/path types.
 
