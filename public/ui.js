@@ -437,7 +437,7 @@ function keyhandler(evt) {
         break
         case 'i': case 'I': // i = all, I = one
         if (cursorMode == 'select' && selected) {
-            let pic = window.prompt('URL of new image')
+            let pic = window.prompt('URL of new image', selected.get('image'))
             if (!pic) pic = false
             if (k == 'I')
                 postAction('editone', [selected.id, {image:pic}])

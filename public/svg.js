@@ -452,6 +452,16 @@ Creature.prototype.set = function(attrs) {
         this.pinGM = attrs.pinGM
     }
 }
+Creature.prototype.get = function(name) {
+    switch(name) {
+        case 'pow': return {x:this.x, y:this.y}
+        case 'color': return this.token.style.stroke
+        case 'width': return this.token.r.baseVal.value*2
+        case 'image': return this.bg.lastChild.tagName == 'image' ? this.bg.lastChild.href.baseVal : undefined
+        default:
+            if (name in this) return this[name]
+    }
+}
 
 Creature.prototype.recreateArgs = function() {
     return [this.x, this.y, {
