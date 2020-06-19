@@ -51,8 +51,10 @@ final class WebChat {
 	}
 	// mapped to POST /push
 	void postPush() {
+		logInfo(`recieved push notification`);
 		[`git`, `pull`].execute;
 		[`dub`, `build`].execute;
+		logInfo(`done handling push notification`);
 	}
 
 	private Room[string] m_rooms;
