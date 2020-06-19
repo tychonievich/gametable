@@ -8,6 +8,7 @@ import vibe.http.fileserver;
 import vibe.http.router;
 import vibe.http.server;
 import vibe.http.websockets;
+import vibe.core.process;
 import vibe.utils.string;
 import vibe.web.web;
 import std.conv : text, to;
@@ -47,6 +48,11 @@ final class WebChat {
 			else if (message.length) r.addMessage(name, message, this);
 		}
 		sender.join;
+	}
+	// mapped to POST /push
+	void postPush() {
+		[`git`, `pull`].execute;
+		[`dub`, `build`].execute;
 	}
 
 	private Room[string] m_rooms;
