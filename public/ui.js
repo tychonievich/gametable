@@ -277,7 +277,7 @@ function postAction(func) {
             func = {func:func, args:Array.prototype.slice.call(arguments,1)}
     }
     if ('object' == typeof func) func = JSON.stringify(func)
-console.log('sending', func)
+//console.log('sending', func)
     if (!window.sock || window.sock.readyState > 1) wsConnect()
     if (!window.sock || window.sock.readyState > 1)
         throw Error('unable to open WebSocket')
