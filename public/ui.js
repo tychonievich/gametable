@@ -80,7 +80,8 @@ var handlers = {
                 postAction('newtoken', [cr.x, cr.y, {pinGM:true}, {name:cr.name, num:num}])
                 hastoken = true
             }
-            cr.remove()
+            if (cr) cr.remove()
+            else x.remove()
         })
         c.querySelectorAll('defs pattern').forEach(x => x.remove())
         if (!hastoken) {
