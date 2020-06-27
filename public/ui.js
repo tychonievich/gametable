@@ -21,6 +21,7 @@ function wsConnect(onopen) {
 
 // CSS query selectors need special escaping to work on non-identifier IDs
 function cssIdEscape(id) {
+    if (!id) return
     return id.replace(/[-!"#$%&\'()*+,./;<=>?@\[\\\]^`{}|~]/g, '\\$&')
         .replace(/[ ]/g,'\\ ')
         .replace(/[\n\r\t\f\v]/g,(x => '\\'+x.codePointAt(0).toString(16)+' '))
