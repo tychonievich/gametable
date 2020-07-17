@@ -34,7 +34,6 @@ var diceUndos = {}
 var strokeUndos = {}
 var moveUndos = {}
 var turnmode = false
-var showIndicator = false;
 
 var sid   = null; // session ID
 var idcnt = 0; // id count for this session
@@ -219,24 +218,6 @@ var handlers = {
             href:url,
             preserveAspectRatio:'xMaxYMax',
         })
-    },
-    '.indicator': (sender, center) => {
-        let old = c.getElementById('mouse-'+sender)
-        if (!center) {
-            if (old) old.remove()
-        } else {
-            if (!old) createSVG('#overlay', 'text', {
-                x: center.x,
-                y: center.y,
-                id: 'mouse-'+sender,
-                'text-anchor':'middle',
-            })
-            else {
-                old.setAttribute('x', center.x);
-                old.setAttribute('y', center.y);
-            }
-        }
-        
     },
     
     newstroke: (sender, id, within, attrs) => {
