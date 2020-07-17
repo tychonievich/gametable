@@ -211,6 +211,14 @@ var handlers = {
         c.getElementById(id).ownCr.toggleClass(cls)
     },
     
+    bgimage: (sender, url, width, center) => {
+        createSVG('#background', 'image', {
+            x:center.x-width/2, y:center.y-width/2,
+            width:width, height:width,
+            href:url,
+            preserveAspectRatio:'xMaxYMax',
+        })
+    },
     
     newstroke: (sender, id, within, attrs) => {
         if (!c.getElementById(id)) {
@@ -452,6 +460,15 @@ function keyhandler(evt) {
         }
         break
         
+        case 'B':
+        if (cursorMode == 'select' && !selected) {
+            let pic = window.prompt('URL of background image')
+            if (!pic) pic = false
+            let width = window.prompt('with of image (in feet)')
+            postAction('bgimage', [pic, width, window._lastMousePos])
+        }
+        break;
+
         
         case 'r': 
         zoom(10)

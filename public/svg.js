@@ -35,6 +35,7 @@ function getMousePos(evt) {
         x: (evt.clientX - CTM.e) / CTM.a, 
         y: (evt.clientY - CTM.f) / CTM.d,
     }
+    window._lastMousePos = ans;
     return ans;
     
 }
