@@ -146,7 +146,8 @@ final class Room {
 		}
 		synchronized(mutex) {
 			messages ~= ans;
-			this.path.appendToFile(ans.toString~'\n');
+			if (msg[0] != '.') // don't log hidden messages (start with .)
+				this.path.appendToFile(ans.toString~'\n');
 		}
 		monitor.emit;
 	}
