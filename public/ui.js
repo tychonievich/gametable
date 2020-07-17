@@ -845,7 +845,7 @@ function loaded() {
     <span>add <u>t</u>oken</span>   
     <span><u>z</u>oom in/<u>Z</u>oom out</span>   
     <span><u>r</u>eset pan/zoom</span>   
-    <span>toggle <u>i</u>dicator</span>
+    <span>toggle <u>i</u>ndicator</span>
 </div>
 <div><strong>Selected token actions</strong>:   
     <span><u>c</u>olor</span>   
