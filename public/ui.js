@@ -221,16 +221,22 @@ var handlers = {
         })
     },
     '.indicator': (sender, center) => {
+        console.log('.indicator', sender, center)
         let old = c.getElementById('mouse-'+sender)
         if (!center) {
             if (old) old.remove()
         } else {
-            if (!old) createSVG('#overlay', 'text', {
-                x: center.x,
-                y: center.y,
-                id: 'mouse-'+sender,
-                'text-anchor':'middle',
-            })
+            if (!old) { 
+                old = createSVG('#overlay', 'text', {
+                    x: center.x,
+                    y: center.y,
+                    id: 'mouse-'+sender,
+                    'text-anchor':'middle',
+                    'font-size':2,
+                    'font-family':'sans-serif',
+                })
+                old.appendChild(document.createTextNode(sender))
+            }
             else {
                 old.setAttribute('x', center.x);
                 old.setAttribute('y', center.y);
