@@ -34,6 +34,7 @@ var diceUndos = {}
 var strokeUndos = {}
 var moveUndos = {}
 var turnmode = false
+var showIndicator = false;
 
 var sid   = null; // session ID
 var idcnt = 0; // id count for this session
@@ -218,6 +219,24 @@ var handlers = {
             href:url,
             preserveAspectRatio:'xMaxYMax',
         })
+    },
+    '.indicator': (sender, center) => {
+        let old = c.getElementById('mouse-'+sender)
+        if (!center) {
+            if (old) old.remove()
+        } else {
+            if (!old) createSVG('#overlay', 'text', {
+                x: center.x,
+                y: center.y,
+                id: 'mouse-'+sender,
+                'text-anchor':'middle',
+            })
+            else {
+                old.setAttribute('x', center.x);
+                old.setAttribute('y', center.y);
+            }
+        }
+        
     },
     
     newstroke: (sender, id, within, attrs) => {
@@ -460,16 +479,6 @@ function keyhandler(evt) {
         }
         break
         
-        case 'B':
-        if (cursorMode == 'select' && !selected) {
-            let pic = window.prompt('URL of background image')
-            if (!pic) pic = false
-            let width = window.prompt('with of image (in feet)')
-            postAction('bgimage', [pic, width, window._lastMousePos])
-        }
-        break;
-
-        
         case 'r': 
         zoom(10)
         c.viewBox.baseVal.x = - c.viewBox.baseVal.width/2
@@ -525,6 +534,27 @@ function keyhandler(evt) {
 
         case 'C+z': console.warn('undo not implemented'); break;
         case 'C+Z': case 'C+y': console.warn('redo not implemented'); break;
+
+        case 'B':
+        if (user == 'GM' && cursorMode == 'select' && !selected && window._lastMousePos) {
+            let pic = window.prompt('URL of background image')
+            if (!pic) pic = false
+            let width = window.prompt('with of image (in feet)')
+            postAction('bgimage', [pic, width, window._lastMousePos])
+        }
+        break;
+
+        case 'i':
+        showIndicator = !showIndicator
+        if (showIndicator) {
+            if (window._lastMousePos)
+                postAction('.indicator', [window._lastMousePos])
+        } else {
+            postAction('.indicator', [false])
+        }
+        break;
+
+
 
         default: return;
     }
@@ -617,6 +647,8 @@ function movehandler(evt) {
     if (document.querySelector('dialog')) return
 
     let here = getMousePos(evt);
+    if (showIndicator) postAction('.indicator', [here])
+
     let brush = c.getElementById('brush')
     brush.cx.baseVal.value = here.x
     brush.cy.baseVal.value = here.y
@@ -812,7 +844,8 @@ function loaded() {
     <span>change <u>c</u>olor</span>   
     <span>add <u>t</u>oken</span>   
     <span><u>z</u>oom in/<u>Z</u>oom out</span>   
-    <span><u>r</u>eset pan/zoom</span>
+    <span><u>r</u>eset pan/zoom</span>   
+    <span>toggle <u>i</u>dicator</span>
 </div>
 <div><strong>Selected token actions</strong>:   
     <span><u>c</u>olor</span>   
@@ -829,6 +862,7 @@ function loaded() {
     <span><u>n</u>ext turn</span>      
     <span><u>x</u> remove token</span>      
     <span>Shift+tray = board</span>   
+    <span><u>B</u>ackground image</span>   
 </div>
 `)+`
 </details>`
