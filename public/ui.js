@@ -221,22 +221,16 @@ var handlers = {
         })
     },
     '.indicator': (sender, center) => {
-        console.log('.indicator', sender, center)
         let old = c.getElementById('mouse-'+sender)
         if (!center) {
             if (old) old.remove()
         } else {
-            if (!old) { 
-                old = createSVG('#overlay', 'text', {
-                    x: center.x,
-                    y: center.y,
-                    id: 'mouse-'+sender,
-                    'text-anchor':'middle',
-                    'font-size':2,
-                    'font-family':'sans-serif',
-                })
-                old.appendChild(document.createTextNode(sender))
-            }
+            if (!old) createSVG('#overlay', 'text', {
+                x: center.x,
+                y: center.y,
+                id: 'mouse-'+sender,
+                'text-anchor':'middle',
+            })
             else {
                 old.setAttribute('x', center.x);
                 old.setAttribute('y', center.y);
@@ -542,7 +536,7 @@ function keyhandler(evt) {
         case 'C+Z': case 'C+y': console.warn('redo not implemented'); break;
 
         case 'B':
-        if (user == 'GM' && cursorMode == 'select' && !selected && window._lastMousePos) {
+        if (user == 'GM' && cursorMode == 'select' && !selected) {
             let pic = window.prompt('URL of background image')
             if (!pic) pic = false
             let width = window.prompt('with of image (in feet)')
@@ -550,15 +544,7 @@ function keyhandler(evt) {
         }
         break;
 
-        case 'i':
-        showIndicator = !showIndicator
-        if (showIndicator) {
-            if (window._lastMousePos)
-                postAction('.indicator', [window._lastMousePos])
-        } else {
-            postAction('.indicator', [false])
-        }
-        break;
+        
 
 
 
@@ -653,8 +639,6 @@ function movehandler(evt) {
     if (document.querySelector('dialog')) return
 
     let here = getMousePos(evt);
-    if (showIndicator) postAction('.indicator', [here])
-
     let brush = c.getElementById('brush')
     brush.cx.baseVal.value = here.x
     brush.cy.baseVal.value = here.y
@@ -851,7 +835,7 @@ function loaded() {
     <span>add <u>t</u>oken</span>   
     <span><u>z</u>oom in/<u>Z</u>oom out</span>   
     <span><u>r</u>eset pan/zoom</span>   
-    <span>toggle <u>i</u>ndicator</span>
+    <span>toggle <u>i</u>dicator</span>
 </div>
 <div><strong>Selected token actions</strong>:   
     <span><u>c</u>olor</span>   
